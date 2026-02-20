@@ -19,9 +19,10 @@ export default async function AdminDashboard() {
     supabase.from('orders').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
   ]);
 
+
   const totalRevenue = revenueData?.reduce(
-    (sum, o) => sum + (o.total_amount ?? 0), 0
-  ) ?? 0;
+  (sum: number, o: { total_amount: number }) => sum + (o.total_amount ?? 0), 0
+) ?? 0;
 
   const stats = [
     { label: 'Total Products',   value: totalProducts ?? 0,          icon: '🎂', color: 'bg-rose-100 text-rose-700' },
