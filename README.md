@@ -18,10 +18,8 @@ A full-stack e-commerce web application for an artisan cake shop.
 - Fully responsive mobile-first UI
 
 ## 🚀 Live Demo
-[View Live App](#) ← add your Vercel link here
+[View Live App](#https://sweetslice.vercel.app/)
 
 ## 📸 Screenshots
-← add screenshots of your app here
+←![alt text](image.png)
 
-## Setup
-Clone the repo and follow the setup instructions in the wiki.
