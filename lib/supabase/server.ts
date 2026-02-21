@@ -33,6 +33,9 @@ export function createAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+  console.log('Admin client URL:', url ? 'found' : 'MISSING');
+  console.log('Admin client KEY:', key ? 'found' : 'MISSING');
+
   if (!url || !key) {
     throw new Error('Missing Supabase URL or Service Role Key');
   }
