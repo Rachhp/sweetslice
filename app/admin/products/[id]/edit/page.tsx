@@ -3,6 +3,7 @@
 import { createAdminClient } from '@/lib/supabase/server';
 import { AdminProductForm } from '@/components/AdminProductForm';
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 export default async function EditProductPage({
   params,
@@ -10,26 +11,39 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = createAdminClient();
 
-  const { data: product } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single();
+  let product = null;
+
+  try {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
+      .single();
+    product = data;
+  } catch (err) {
+    console.error('Edit page error:', err);
+  }
 
   if (!product) notFound();
 
   return (
     <div>
-      <h1 className="font-display text-3xl font-bold text-slate-800 mb-8">
-        Edit Product
-      </h1>
+      <div className="flex items-center gap-4 mb-8">
+        <Link
+          href="/admin/products"
+          className="text-sm text-slate-400 hover:text-rose-500 transition-colors"
+        >
+          ← Back to Products
+        </Link>
+        <h1 className="font-display text-3xl font-bold text-slate-800">
+          Edit Product
+        </h1>
+      </div>
       <div className="bg-white rounded-2xl p-6 shadow-sm">
         <AdminProductForm mode="edit" product={product} />
       </div>
     </div>
   );
 }
-
-
