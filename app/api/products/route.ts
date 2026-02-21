@@ -1,5 +1,4 @@
-// app/api/products/route.ts
-// Product CRUD — admin-protected write operations
+// app/api/products/[id]/route.ts
 
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/server';
@@ -9,8 +8,13 @@ function isAdmin(email?: string | null): boolean {
   return email === process.env.ADMIN_EMAIL;
 }
 
-export async function POST(request: Request) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -24,7 +28,8 @@ export async function POST(request: Request) {
 
   const { data, error } = await admin
     .from('products')
-    .insert({ ...body, owner_id: user.id })
+    .update(body)
+    .eq('id', id)
     .select()
     .single();
 
@@ -32,25 +37,30 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ product: data }, { status: 201 });
+  return NextResponse.json({ product: data });
 }
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const category = searchParams.get('category');
-  const admin = createAdminClient();
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const supabase = await createClient();
 
-  let query = admin.from('products').select('*').order('created_at', { ascending: false });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (category && category !== 'all') {
-    query = query.eq('category', category);
+  if (!user || !isAdmin(user.email)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
-  const { data, error } = await query;
+  const admin = createAdminClient();
+  const { error } = await admin.from('products').delete().eq('id', id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ products: data });
+  return NextResponse.json({ success: true });
 }

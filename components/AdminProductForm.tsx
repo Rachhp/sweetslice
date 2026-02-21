@@ -42,7 +42,7 @@ export function AdminProductForm({ mode, product }: AdminProductFormProps) {
       const res = await fetch(
         mode === 'edit' ? `/api/products/${product!.id}` : '/api/products',
         {
-          method: mode === 'edit' ? 'PUT' : 'POST',
+          method: mode === 'edit' ? 'PATCH' : 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         }

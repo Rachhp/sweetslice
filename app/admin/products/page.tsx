@@ -110,7 +110,7 @@ export default async function AdminProductsPage() {
                     {product.stock}
                   </span>
                 </td>
-                <td className="px-6 py-4">
+                {/* <td className="px-6 py-4">
                   <form action={deleteProduct}>
                     <input type="hidden" name="id" value={product.id} />
                     <button
@@ -120,7 +120,41 @@ export default async function AdminProductsPage() {
                       Delete
                     </button>
                   </form>
-                </td>
+                </td> */}
+
+<td className="px-6 py-4">
+  <div className="flex items-center gap-3">
+    <a href={`/admin/products/${product.id}/edit`}
+      className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+      Edit
+    </a>
+    <form action={deleteProduct}>
+      <input type="hidden" name="id" value={product.id} />
+      <button type="submit"
+        className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors">
+        Delete
+      </button>
+    </form>
+  </div>
+</td>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               </tr>
             ))}
           </tbody>
