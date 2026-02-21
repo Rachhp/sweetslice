@@ -1,34 +1,54 @@
 // app/admin/products/page.tsx
-// Admin product management with create/edit/delete
 
 import { createAdminClient } from '@/lib/supabase/server';
-import type { Product } from '@/lib/types';
 import { AdminProductForm } from '@/components/AdminProductForm';
 import { formatPrice } from '@/utils/format';
 import Image from 'next/image';
 import { PLACEHOLDER_IMAGE } from '@/utils/constants';
 import { revalidatePath } from 'next/cache';
 
-// Server Actions
 async function deleteProduct(formData: FormData) {
   'use server';
   const id = formData.get('id') as string;
-  const supabase = createAdminClient();
-  await supabase.from('products').delete().eq('id', id);
-  revalidatePath('/admin/products');
-  revalidatePath('/shop');
+  try {
+    const supabase = createAdminClient();
+    await supabase.from('products').delete().eq('id', id);
+    revalidatePath('/admin/products');
+    revalidatePath('/shop');
+  } catch (err) {
+    console.error('Delete error:', err);
+  }
 }
 
 export default async function AdminProductsPage() {
-  const supabase = createAdminClient();
-  const { data: products, error} = await supabase
-    .from('products')
-    .select('*')
-    .order('created_at', { ascending: false });
-    
+  let products = null;
+
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
     if (error) {
-  console.error('Products fetch error:', error);
-}
+      console.error('Fetch error:', error.message);
+    } else {
+      products = data;
+    }
+  } catch (err) {
+    console.error('Admin client error:', err);
+    return (
+      <div className="text-center py-20">
+        <div className="text-5xl mb-4">⚠️</div>
+        <h2 className="font-display text-2xl text-red-600 mb-2">
+          Configuration Error
+        </h2>
+        <p className="text-slate-500">
+          Service role key is missing or invalid. Please check Vercel environment variables.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -38,7 +58,6 @@ export default async function AdminProductsPage() {
         </h1>
       </div>
 
-      {/* Create / Edit Form */}
       <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
         <h2 className="font-display text-xl font-bold text-slate-800 mb-6">
           Add New Product
@@ -46,7 +65,6 @@ export default async function AdminProductsPage() {
         <AdminProductForm mode="create" />
       </div>
 
-      {/* Products Table */}
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-rose-50 text-slate-600">
@@ -93,26 +111,15 @@ export default async function AdminProductsPage() {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={`/admin/products/${product.id}/edit`}
-                      className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                  <form action={deleteProduct}>
+                    <input type="hidden" name="id" value={product.id} />
+                    <button
+                      type="submit"
+                      className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors"
                     >
-                      Edit
-                    </a>
-                    <form action={deleteProduct}>
-                      <input type="hidden" name="id" value={product.id} />
-                      <button
-                        type="submit"
-                        className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors"
-                        onClick={(e) => {
-                          if (!confirm('Delete this product?')) e.preventDefault();
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </form>
-                  </div>
+                      Delete
+                    </button>
+                  </form>
                 </td>
               </tr>
             ))}
