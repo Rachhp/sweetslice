@@ -1,9 +1,9 @@
-// app/admin/products/[id]/edit/page.tsx
-
 import { createAdminClient } from '@/lib/supabase/server';
 import { AdminProductForm } from '@/components/AdminProductForm';
-import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-dynamic';
 
 export default async function EditProductPage({
   params,
