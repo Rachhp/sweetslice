@@ -32,12 +32,16 @@ export function AdminProductForm({ mode, product }: AdminProductFormProps) {
     setLoading(true);
     setError('');
 
-    const payload = {
-      ...form,
-      price: parseFloat(form.price),
-      stock: parseInt(form.stock, 10),
-    };
 
+  const payload = {
+    name: form.name,
+    description: form.description,
+    price: parseFloat(form.price),
+    image_url: form.image_url,
+    category: form.category,
+    stock: parseInt(form.stock, 10),
+  };
+  
     try {
       const res = await fetch(
         mode === 'edit' ? `/api/products/${product!.id}` : '/api/products',
