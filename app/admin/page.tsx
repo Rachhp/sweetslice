@@ -3,6 +3,8 @@
 
 import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice } from '@/utils/format';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function AdminDashboard() {
   const supabase = createAdminClient();

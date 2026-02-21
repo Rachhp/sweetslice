@@ -5,6 +5,8 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { formatPrice, formatDate, getStatusColor } from '@/utils/format';
 import { ORDER_STATUSES } from '@/utils/constants';
 import { revalidatePath } from 'next/cache';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function updateOrderStatus(formData: FormData) {
   'use server';

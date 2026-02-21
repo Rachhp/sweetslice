@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { PLACEHOLDER_IMAGE } from '@/utils/constants';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 async function deleteProduct(formData: FormData) {
   'use server';
@@ -20,9 +22,6 @@ async function deleteProduct(formData: FormData) {
   revalidatePath('/admin/products');
   revalidatePath('/shop');
 }
-
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
 
 export default async function AdminProductsPage() {
   let products: any[] = [];
