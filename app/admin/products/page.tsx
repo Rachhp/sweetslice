@@ -2,6 +2,7 @@
 // Admin product management with create/edit/delete
 
 import { createAdminClient } from '@/lib/supabase/server';
+import type { Product } from '@/lib/types';
 import { AdminProductForm } from '@/components/AdminProductForm';
 import { formatPrice } from '@/utils/format';
 import Image from 'next/image';
@@ -20,10 +21,14 @@ async function deleteProduct(formData: FormData) {
 
 export default async function AdminProductsPage() {
   const supabase = createAdminClient();
-  const { data: products } = await supabase
+  const { data: products, error} = await supabase
     .from('products')
     .select('*')
     .order('created_at', { ascending: false });
+    
+    if (error) {
+  console.error('Products fetch error:', error);
+}
 
   return (
     <div>
