@@ -56,9 +56,12 @@ export function AdminProductForm({ mode, product }: AdminProductFormProps) {
         const data = await res.json();
         setError(data.error || 'Failed to save product');
       } else {
-        router.refresh();
+        
         if (mode === 'create') {
+          router.refresh();
           setForm({ name: '', description: '', price: '', image_url: '', category: 'classic', stock: '0' });
+        }else{
+          router.push('/admin/products');
         }
       }
     } catch {
