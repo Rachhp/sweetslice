@@ -2,21 +2,21 @@
   "name": "sweetslice",
   "version": "1.0.0",
   "private": true,
-
   "scripts": {
-  "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev",
-  "build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
-  "start": "next start",
-  "lint": "next lint",
-  "type-check": "tsc --noEmit"
-},
-
+    "dev": "node --max-old-space-size=4096 node_modules/next/dist/bin/next dev",
+    "build": "node --max-old-space-size=4096 node_modules/next/dist/bin/next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
+    "@stripe/stripe-js": "^8.8.0",
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.4",
     "next": "^14.2.18",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "stripe": "^20.3.1"
   },
   "devDependencies": {
     "@types/node": "^22",
@@ -29,5 +29,4 @@
     "tailwindcss": "^3.4.14",
     "typescript": "^5"
   }
-  
 }

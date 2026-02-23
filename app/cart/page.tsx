@@ -25,6 +25,35 @@ export default function CartPage() {
   const { cartItems, loading, cartTotal, updateQuantity, removeFromCart, clearCart } =
     useCart(user?.id);
 
+  // const handleCheckout = async () => {
+  //   if (!user || cartItems.length === 0) return;
+  //   setCheckingOut(true);
+
+  //   try {
+  //     const response = await fetch('/api/orders', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         userId: user.id,
+  //         cartItems,
+  //         totalAmount: cartTotal,
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       await clearCart();
+  //       router.push('/orders?success=true');
+  //     } else {
+  //       const err = await response.json();
+  //       alert(err.error || 'Checkout failed. Please try again.');
+  //     }
+  //   } catch {
+  //     alert('Network error. Please try again.');
+  //   } finally {
+  //     setCheckingOut(false);
+  //   }
+  // };
+
   const handleCheckout = async () => {
     if (!user || cartItems.length === 0) return;
     setCheckingOut(true);
@@ -41,8 +70,11 @@ export default function CartPage() {
       });
 
       if (response.ok) {
+        const data = await response.json();
         await clearCart();
-        router.push('/orders?success=true');
+        // Redirect to payment page instead of orders
+        // router.push(`/payment?orderId=${data.order.id}&amount=${cartTotal}`);
+        router.push(`/payment?orderId=${data.orderId}&amount=${cartTotal}`);
       } else {
         const err = await response.json();
         alert(err.error || 'Checkout failed. Please try again.');
@@ -127,7 +159,8 @@ export default function CartPage() {
               disabled={checkingOut}
               className="w-full bg-rose-500 hover:bg-rose-600 disabled:bg-rose-300 text-white font-bold py-4 rounded-2xl transition-all duration-200 btn-press shadow-md hover:shadow-lg text-lg"
             >
-              {checkingOut ? 'Placing Order…' : 'Place Order'}
+              {/* {checkingOut ? 'Placing Order…' : 'Place Order'} */}
+              {checkingOut ? 'Processing…' : 'Proceed to Payment'}
             </button>
 
             <Link
