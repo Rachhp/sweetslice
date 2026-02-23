@@ -49,7 +49,7 @@ export function PaymentForm({ amount, orderId, onSuccess, onError }: PaymentForm
 
     try {
       // Step 1 — Create payment intent on server
-      const res = await fetch('/api/payment/create-order', {
+      const res = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount, orderId }),
